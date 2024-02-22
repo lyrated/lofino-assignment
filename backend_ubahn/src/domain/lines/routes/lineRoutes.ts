@@ -1,10 +1,11 @@
-import express from "express";
-import { lines } from "../data";
+import express from 'express';
+
+import { lines } from '../../../data';
 
 const router = express.Router();
 
 router.get(
-  "/",
+  '/',
   /**
    * returns an array of line information from the route "/"":
    *
@@ -21,11 +22,11 @@ router.get(
       color: line.color,
     }));
     res.send(responseItems);
-  }
+  },
 );
 
 router.get(
-  "/:id",
+  '/:id',
   /**
    * returns a specific line by id, e.g. `GET /lines/U8`
    */
@@ -40,7 +41,7 @@ router.get(
     }
 
     res.send(requestedLine);
-  }
+  },
 );
 
 // TODO: add further routes here

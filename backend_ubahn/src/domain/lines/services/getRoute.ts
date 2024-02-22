@@ -1,20 +1,5 @@
-import { Line } from "./Line";
-
-export type RouteSegment = {
-  /**
-   * `enter` = enter to `line` at this `station`
-   *
-   * `switch` = switch to `line` at this `station`
-   *
-   * `exit` = exit `line` at `station`
-   */
-
-  action: "enter" | "switch" | "exit";
-  station: string;
-  line: Line;
-};
-
-export type Route = RouteSegment[];
+import { Line } from '../models/Line';
+import { Route } from '../models/Route';
 
 /**
  * returns the `Route` from `originStation` to `destinationStation`.
@@ -44,7 +29,7 @@ export type Route = RouteSegment[];
 export function getRoute(
   originStation: string,
   destinationStation: string,
-  allLines: Line[]
+  allLines: Line[],
 ): Route {
-  throw new Error("to be implemented");
+  throw new Error('to be implemented');
 }

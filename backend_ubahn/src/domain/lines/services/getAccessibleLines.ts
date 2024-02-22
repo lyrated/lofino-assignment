@@ -1,4 +1,4 @@
-import { Line } from "./Line";
+import { Line } from '../models/Line';
 
 /**
  * returns an array of `Line`s that are accessible from the station with name `fromStation`.
@@ -9,8 +9,9 @@ import { Line } from "./Line";
 export function getAccessibleLines(
   onLine: Line,
   fromStation: string,
-  allLines: Line[]
+  allLines: Line[],
 ): Line[] {
-  // TODO: implement
-  throw new Error("not implemented");
+  return allLines.filter((line) => {
+    return line.stations.includes(fromStation) && line.name !== onLine.name;
+  });
 }
