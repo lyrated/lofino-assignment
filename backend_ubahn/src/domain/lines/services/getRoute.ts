@@ -1,5 +1,5 @@
-import { Line } from '../models/Line';
-import { Route } from '../models/Route';
+import { Line } from '../types/Line';
+import { Route } from '../types/Route';
 
 /**
  * returns the `Route` from `originStation` to `destinationStation`.

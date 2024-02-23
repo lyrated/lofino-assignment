@@ -1,6 +1,11 @@
 import express from 'express';
 
 import { lines } from '../../../data';
+import { Direction } from '../enums/Direction';
+import { getAccessibleLines } from '../services/getAccessibleLines';
+import { getAllLines } from '../services/getAllLines';
+import { getLineById } from '../services/getLineById';
+import { getNextStops } from '../services/getNextStops';
 
 const router = express.Router();
 
@@ -16,11 +21,8 @@ router.get(
    * }
    * ```
    */
-  async function getAllLines(req, res) {
-    const responseItems = lines.map((line) => ({
-      name: line.name,
-      color: line.color,
-    }));
+  (req, res) => {
+    const responseItems = getAllLines(lines);
     res.send(responseItems);
   },
 );
@@ -30,11 +32,12 @@ router.get(
   /**
    * returns a specific line by id, e.g. `GET /lines/U8`
    */
-  async function getLineById(req, res) {
+  (req, res) => {
     // find the specific line by key
     const requestedLineId = req.params.id;
 
-    const requestedLine = lines.find((line) => line.name === requestedLineId);
+    const requestedLine = getLineById(requestedLineId, lines);
+
     if (!requestedLine) {
       res.sendStatus(404);
       return;
@@ -44,6 +47,50 @@ router.get(
   },
 );
 
-// TODO: add further routes here
+router.get('/:line/:station/changes',
+  /**
+   * returns all accessible lines of a specific station as Line object - e.g. GET /lines/U2/Stadtmitte/changes
+   */
+  (req, res) => {
+    const requestedLineId = req.params.line;
+    const requestedStation = req.params.station;
+    const requestedLine = getLineById(requestedLineId, lines);
+
+    if (!requestedLine) {
+      res.sendStatus(404);
+      return;
+    }
+
+    const accessibleLines = getAccessibleLines(requestedLine, requestedStation, lines);
+    res.send(accessibleLines);
+  },
+);
+
+router.get('/:line/:station/next',
+  /**
+   * returns n stops from a specific station - e.g. GET /lines/U5/Weberwiese/next
+   */
+  (req, res) => {
+    const requestedLinedId = req.params.line;
+    const requestedStation = req.params.station;
+    const requestedLine = getLineById(requestedLinedId, lines);
+
+    // these params should be properly validated
+    const requestedDirection = req.query.direction as Direction;
+    const requestedAmount = typeof req.query.n === 'string' ? parseInt(req.query.n) : undefined;
+
+    if (!requestedLine) {
+      res.sendStatus(404);
+      return;
+    }
+
+    try {
+      const nextStations = getNextStops(requestedLine, requestedStation, requestedDirection, requestedAmount);
+      res.send(nextStations);
+    } catch (e: unknown) {
+      res.sendStatus(404);
+    }
+  },
+);
 
 export const lineRoutes = router;

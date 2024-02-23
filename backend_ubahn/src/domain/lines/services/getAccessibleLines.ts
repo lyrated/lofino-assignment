@@ -1,4 +1,4 @@
-import { Line } from '../models/Line';
+import { Line } from '../types/Line';
 
 /**
  * returns an array of `Line`s that are accessible from the station with name `fromStation`.

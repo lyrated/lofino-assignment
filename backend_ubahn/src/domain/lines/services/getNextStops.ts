@@ -1,5 +1,5 @@
 import { Direction } from '../enums/Direction';
-import { Line } from '../models/Line';
+import { Line } from '../types/Line';
 
 /**
  * Computes which stations of a given line follow next after a given station
@@ -10,29 +10,31 @@ import { Line } from '../models/Line';
 export function getNextStops(
   line: Line,
   /**
+   * which station within `line` to base the computation on
+   */
+  fromStation: string,
+  /**
    * if `forward`, returns the stations that follow `fromStation` in the `line.stations` array.
    *
    * if `backward`, returns the stations that precede `fromStation` in the `line.stations` array.
    */
-  direction: Direction,
-  /**
-   * which station within `line` to base the computation on
-   */
-  fromStation: string,
+  direction: Direction = Direction.Forward,
   /**
    * the maximum number of stops that should be returned
    */
   nStops = 3,
 ): string[] {
+  let stations = [...line.stations];
+
   if (direction === Direction.Backward) {
-    line.stations = line.stations.reverse();
+    stations = stations.reverse();
   }
 
-  const fromIndex = line.stations.indexOf(fromStation);
+  const fromIndex = stations.indexOf(fromStation);
 
   if (fromIndex === -1) {
     throw new Error('Station not found on line.');
   }
 
-  return line.stations.slice(fromIndex + 1, fromIndex + nStops + 1);
+  return stations.slice(fromIndex + 1, fromIndex + nStops + 1);
 }

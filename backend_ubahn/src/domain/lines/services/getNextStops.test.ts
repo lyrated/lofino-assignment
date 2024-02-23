@@ -14,8 +14,8 @@ describe('linear line', () => {
   it(`returns the next 3 stops if passed 3`, () => {
     const nextStops = getNextStops(
       linearLine,
-      Direction.Forward,
       'Station2',
+      Direction.Forward,
       3,
     );
     expect(nextStops).toStrictEqual(['Station3', 'Station4', 'Station5']);
@@ -24,8 +24,8 @@ describe('linear line', () => {
   it(`returns the next 2 stops if passed 2`, () => {
     const nextStops = getNextStops(
       linearLine,
-      Direction.Forward,
       'Station2',
+      Direction.Forward,
       2,
     );
     expect(nextStops).toStrictEqual(['Station3', 'Station4']);
@@ -34,8 +34,8 @@ describe('linear line', () => {
   it(`returns the last 2 stops if invoked at end of array`, () => {
     const nextStops = getNextStops(
       linearLine,
-      Direction.Forward,
       'Station3',
+      Direction.Forward,
       3,
     );
     expect(nextStops).toStrictEqual(['Station4', 'Station5']);
@@ -44,8 +44,8 @@ describe('linear line', () => {
   it(`returns the previous 3 stops if invoked with backward direction`, () => {
     const nextStops = getNextStops(
       linearLine,
-      Direction.Backward,
       'Station5',
+      Direction.Backward,
       3,
     );
     expect(nextStops).toStrictEqual(['Station4', 'Station3', 'Station2']);
@@ -53,7 +53,7 @@ describe('linear line', () => {
 
   it(`throws if requested station is not found`, () => {
     const act = () =>
-      getNextStops(linearLine, Direction.Forward, 'StationX', 3);
+      getNextStops(linearLine, 'StationX', Direction.Forward, 3);
     expect(act).toThrowError();
   });
 });
@@ -70,8 +70,8 @@ xdescribe('cyclic line', () => {
   it(`continues with starting station if end is reached`, () => {
     const nextStops = getNextStops(
       cyclicLine,
-      Direction.Forward,
       'Station4',
+      Direction.Forward,
       3,
     );
     expect(nextStops).toStrictEqual(['Station5', 'Station1', 'Station2']);
@@ -79,7 +79,7 @@ xdescribe('cyclic line', () => {
 
   it(`throws if called with direction Backward`, () => {
     const act = () =>
-      getNextStops(cyclicLine, Direction.Backward, 'Station5, 3');
+      getNextStops(cyclicLine, 'Station5', Direction.Backward, 3);
     expect(act).toThrowError();
   });
 });
