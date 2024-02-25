@@ -105,6 +105,14 @@ For an example on how the frontend _could_ look like, refer to [this rough scetc
 
 ## Your Notes
 
-Here you can add your own notes and comments about the project.
-For example, what trade offs did you have to decide for? What would you have done differently if you had more time?
-What did you think of the tasks? Was it too much / too easy / too ambiguous?
+The frontend tasks and the first 3 backend tasks were done. Unfortunately, I was a bit stuck at the last backend task and did not finish it as I already spent a few hours on it. I'm sure after an exchange with another person it would have come to me, but unfortunately I did not have a chance to do that during my busy week.
+
+What I wish to add if I took more time to finish this assignment:
+
+- Obviously finishing the last backend task (finding a route between 2 stations with more than 1 switch)
+- Validation of parameters
+- Proper error handling and error messages on the frontend
+- Environment variables, e.g. the backend endpoints are hardcoded on the frontend right now
+- Refined frontend, e.g. add context to clear the station data when clicking on a different line
+
+The task was not too hard, however I noticed the data is not updated. The original test for example had "Berliner Straße" as a station but I did not find it in the json.
