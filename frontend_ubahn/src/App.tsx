@@ -1,15 +1,16 @@
-import { Container } from '@mui/material';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 
 import Lines from './components/lines/Lines';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <Container sx={{ marginTop: 4 }}>
+      <Container>
+        <Box my={4}>
           <Lines />
-        </Container>
-      </header>
+        </Box>
+      </Container>
     </div>
   );
 }

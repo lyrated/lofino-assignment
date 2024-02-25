@@ -1,55 +1,64 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Chip, Grid } from '@mui/material';
+import axios, { AxiosResponse } from 'axios';
+
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 import { Line } from '../../types/Line';
+import LinesUbahn from './LinesUbahn';
+import LinesStations from './LinesStations';
 
 /**
- * Fetches and lists the lines from the backend
- *
- * You should probably not use this component, it just serves as an example.
+ * Fetches and lists the line data from the backend
  */
 export default function Lines() {
   const [lines, setLines] = useState<Line[]>([]);
-  const [allStations, setAllStations] = useState<Line>();
+  const [lineData, setLineData] = useState<Line>();
 
   useEffect(() => {
     async function fetchLines() {
-      const response = await axios.get('http://localhost:8080/lines');
+      const response: AxiosResponse<Line[]> = await axios.get(
+        'http://localhost:8080/lines'
+      );
       setLines(response.data);
     }
 
     fetchLines();
   }, []);
 
-  // if we decide that "line" is not dynamic, we could also use an enum instead
   const onLineClick = async (line: string) => {
     try {
-      const response = await axios.get(`http://localhost:8080/lines/${line}`);
-      setAllStations(response.data);
+      const response: AxiosResponse<Line> = await axios.get(
+        `http://localhost:8080/lines/${line}`
+      );
+      setLineData(response.data);
     } catch (e: unknown) {
-      //
+      // here a message should be shown on the UI instead
+      console.error(e);
     }
   };
 
   return (
     <>
       {lines.length > 0 && (
-        <Grid container>
-          <Grid item container spacing={1}>
-            {lines.map((line) => (
-              <Grid item key={line.name}>
-                <Chip
-                  label={line.name}
-                  size="small"
-                  onClick={() => onLineClick(line.name)}
-                  clickable
-                  sx={{ backgroundColor: line.color }} />
-              </Grid>))}
+        <Grid container spacing={1} direction="column">
+          <Grid item>
+            <Typography variant="h3" component="h1">
+              Berlin U-Bahn {lineData && lineData.name}
+            </Typography>
           </Grid>
-          {allStations && <Grid item>
-            {JSON.stringify(allStations)}
-          </Grid>}
+          <Grid item>
+            <LinesUbahn
+              lines={lines}
+              selectedLine={lineData}
+              onLineClick={onLineClick}
+            />
+          </Grid>
+          {lineData && (
+            <Grid item>
+              <LinesStations lineData={lineData} />
+            </Grid>
+          )}
         </Grid>
       )}
     </>
