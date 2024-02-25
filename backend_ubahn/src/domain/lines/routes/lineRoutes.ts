@@ -1,11 +1,11 @@
 import express from 'express';
 
 import { lines } from '../../../data';
-import { Direction } from '../enums/Direction';
 import { getAccessibleLines } from '../services/getAccessibleLines';
 import { getAllLines } from '../services/getAllLines';
 import { getLineById } from '../services/getLineById';
 import { getNextStops } from '../services/getNextStops';
+import { Direction } from '../types/Direction';
 
 const router = express.Router();
 
@@ -24,7 +24,7 @@ router.get(
   (req, res) => {
     const responseItems = getAllLines(lines);
     res.send(responseItems);
-  },
+  }
 );
 
 router.get(
@@ -44,10 +44,11 @@ router.get(
     }
 
     res.send(requestedLine);
-  },
+  }
 );
 
-router.get('/:line/:station/changes',
+router.get(
+  '/:line/:station/changes',
   /**
    * returns all accessible lines of a specific station as Line object - e.g. GET /lines/U2/Stadtmitte/changes
    */
@@ -61,12 +62,17 @@ router.get('/:line/:station/changes',
       return;
     }
 
-    const accessibleLines = getAccessibleLines(requestedLine, requestedStation, lines);
+    const accessibleLines = getAccessibleLines(
+      requestedLine,
+      requestedStation,
+      lines
+    );
     res.send(accessibleLines);
-  },
+  }
 );
 
-router.get('/:line/:station/next',
+router.get(
+  '/:line/:station/next',
   /**
    * returns n stops from a specific station - e.g. GET /lines/U5/Weberwiese/next
    */
@@ -77,7 +83,8 @@ router.get('/:line/:station/next',
 
     // these params should be properly validated
     const requestedDirection = req.query.direction as Direction;
-    const requestedAmount = typeof req.query.n === 'string' ? parseInt(req.query.n) : undefined;
+    const requestedAmount =
+      typeof req.query.n === 'string' ? parseInt(req.query.n) : undefined;
 
     if (!requestedLine) {
       res.sendStatus(404);
@@ -85,12 +92,17 @@ router.get('/:line/:station/next',
     }
 
     try {
-      const nextStations = getNextStops(requestedLine, requestedStation, requestedDirection, requestedAmount);
+      const nextStations = getNextStops(
+        requestedLine,
+        requestedStation,
+        requestedDirection,
+        requestedAmount
+      );
       res.send(nextStations);
-    } catch (e: unknown) {
+    } catch (e) {
       res.sendStatus(404);
     }
-  },
+  }
 );
 
 export const lineRoutes = router;

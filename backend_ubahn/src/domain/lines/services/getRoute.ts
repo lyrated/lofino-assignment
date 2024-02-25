@@ -29,7 +29,7 @@ import { Route } from '../types/Route';
 export function getRoute(
   originStation: string,
   destinationStation: string,
-  allLines: Line[],
+  allLines: Line[]
 ): Route {
   throw new Error('to be implemented');
 }

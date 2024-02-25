@@ -1,4 +1,4 @@
-import { Direction } from '../enums/Direction';
+import { Direction } from '../types/Direction';
 import { Line } from '../types/Line';
 
 /**
@@ -22,7 +22,7 @@ export function getNextStops(
   /**
    * the maximum number of stops that should be returned
    */
-  nStops = 3,
+  nStops = 3
 ): string[] {
   let stations = [...line.stations];
 

@@ -1,6 +1,6 @@
 import { getAccessibleLines } from './getAccessibleLines';
-import { Line } from '../models/Line';
-import { LineType } from '../enums/LineType';
+import { Line } from '../types/Line';
+import { LineType } from '../types/LineType';
 
 const line1: Line = {
   name: 'dummy',

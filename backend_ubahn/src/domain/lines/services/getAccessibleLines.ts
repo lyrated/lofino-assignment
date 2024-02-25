@@ -9,7 +9,7 @@ import { Line } from '../types/Line';
 export function getAccessibleLines(
   onLine: Line,
   fromStation: string,
-  allLines: Line[],
+  allLines: Line[]
 ): Line[] {
   return allLines.filter((line) => {
     return line.stations.includes(fromStation) && line.name !== onLine.name;

@@ -1,7 +1,7 @@
 import { getNextStops } from './getNextStops';
-import { Direction } from '../enums/Direction';
-import { LineType } from '../enums/LineType';
-import { Line } from '../models/Line';
+import { Direction } from '../types/Direction';
+import { LineType } from '../types/LineType';
+import { Line } from '../types/Line';
 
 describe('linear line', () => {
   const linearLine: Line = {
@@ -16,7 +16,7 @@ describe('linear line', () => {
       linearLine,
       'Station2',
       Direction.Forward,
-      3,
+      3
     );
     expect(nextStops).toStrictEqual(['Station3', 'Station4', 'Station5']);
   });
@@ -26,7 +26,7 @@ describe('linear line', () => {
       linearLine,
       'Station2',
       Direction.Forward,
-      2,
+      2
     );
     expect(nextStops).toStrictEqual(['Station3', 'Station4']);
   });
@@ -36,7 +36,7 @@ describe('linear line', () => {
       linearLine,
       'Station3',
       Direction.Forward,
-      3,
+      3
     );
     expect(nextStops).toStrictEqual(['Station4', 'Station5']);
   });
@@ -46,7 +46,7 @@ describe('linear line', () => {
       linearLine,
       'Station5',
       Direction.Backward,
-      3,
+      3
     );
     expect(nextStops).toStrictEqual(['Station4', 'Station3', 'Station2']);
   });
@@ -72,7 +72,7 @@ xdescribe('cyclic line', () => {
       cyclicLine,
       'Station4',
       Direction.Forward,
-      3,
+      3
     );
     expect(nextStops).toStrictEqual(['Station5', 'Station1', 'Station2']);
   });
