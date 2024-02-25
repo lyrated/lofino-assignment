@@ -2,7 +2,6 @@ import express from 'express';
 
 import { lines } from '../../../data';
 import { getAccessibleLines } from '../services/getAccessibleLines';
-import { getAllLines } from '../services/getAllLines';
 import { getLineById } from '../services/getLineById';
 import { getNextStops } from '../services/getNextStops';
 import { Direction } from '../types/Direction';
@@ -22,7 +21,10 @@ router.get(
    * ```
    */
   (req, res) => {
-    const responseItems = getAllLines(lines);
+    const responseItems = lines.map((line) => ({
+      name: line.name,
+      color: line.color,
+    }));
     res.send(responseItems);
   }
 );
