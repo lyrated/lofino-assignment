@@ -1,4 +1,4 @@
-import { LineType } from "./LineType";
+import { LineType } from './LineType';
 
 /**
  * A railway line.
