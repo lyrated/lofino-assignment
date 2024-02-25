@@ -1,4 +1,4 @@
-import { lineRoutes } from './domain/lines/routes/lineRoutes';
+import { lineRoutes } from './domain/lines/routes/line.routes';
 import express from 'express';
 
 const app = express();

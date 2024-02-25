@@ -38,30 +38,30 @@ it(`works when switching lines`, () => {
 });
 
 it(`works with 2 switches`, () => {
-  const route = getRoute('Kochstraße', 'Yorckstraße', lines);
+  const route = getRoute('Viktoria-Luise-Platz', 'Westhafen', lines);
 
   expect(route).toBeDefined();
   expect(route).toHaveLength(4);
 
   const [enter, $switch1, $switch2, exit] = route!;
   expect(enter.action).toBe('enter');
-  expect(enter.station).toBe('Kochstraße');
-  expect(enter.line.name).toBe('U6');
+  expect(enter.station).toBe('Viktoria-Luise-Platz');
+  expect(enter.line.name).toBe('U4');
 
   // NOTE: the exact chosen switches might depend on your implementation, so you might get different results here
   // in this case, ignore or change this test as long as the result is valid as well
   // TODO: make this test more robust
   expect($switch1.action).toBe('switch');
-  expect($switch1.station).toBe('Mehringdamm');
-  expect($switch1.line.name).toBe('U7');
+  expect($switch1.station).toBe('Nollendorfplatz');
+  expect($switch1.line.name).toBe('U2');
 
   expect($switch2.action).toBe('switch');
-  expect($switch2.station).toBe('Berliner Straße');
+  expect($switch2.station).toBe('Zoologischer Garten');
   expect($switch2.line.name).toBe('U9');
 
   expect(exit.action).toBe('exit');
-  expect(exit.station).toBe('Yorckstraße');
-  expect(exit.line.name).toBe('U7');
+  expect(exit.station).toBe('Westhafen');
+  expect(exit.line.name).toBe('U9');
 });
 
 // ignore these for now - we'll talk about it in the interview

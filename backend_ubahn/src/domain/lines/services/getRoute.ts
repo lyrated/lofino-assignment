@@ -1,5 +1,6 @@
 import { Line } from '../types/Line';
 import { Route } from '../types/Route';
+import { getAccessibleLines } from './getAccessibleLines';
 
 /**
  * returns the `Route` from `originStation` to `destinationStation`.
@@ -14,7 +15,7 @@ import { Route } from '../types/Route';
  * [{
  *   "action": "enter",
  *   "station": "Otisstraße",
- *   "line": (U9)
+ *   "line": (U6)
  * }, {
  *   "action": "switch",
  *   "station": "Leopoldplatz",
@@ -31,5 +32,69 @@ export function getRoute(
   destinationStation: string,
   allLines: Line[]
 ): Route {
-  throw new Error('to be implemented');
+  let result: Route = [];
+  return findRoute(originStation, destinationStation, allLines, result);
+}
+
+function findRoute(
+  originStation: string,
+  destinationStation: string,
+  allLines: Line[],
+  result: Route
+) {
+  const linesOrigin: Line[] = allLines.filter((line) => {
+    return line.stations.includes(originStation);
+  });
+  const linesDestination: Line[] = allLines.filter((line) => {
+    return line.stations.includes(destinationStation);
+  });
+
+  if (linesOrigin.length === 0 || linesDestination.length === 0) {
+    throw new Error('Origin or destination not found.');
+  }
+
+  let [sameLine] = linesOrigin.filter((line) => {
+    return linesDestination.find((l) => l.name === line.name);
+  });
+
+  if (sameLine) {
+    result = [
+      ...result,
+      {
+        action: result.length === 0 ? 'enter' : 'switch',
+        station: originStation,
+        line: sameLine,
+      },
+      {
+        action: 'exit',
+        station: destinationStation,
+        line: sameLine,
+      },
+    ];
+
+    return result;
+  }
+
+  for (let line of linesOrigin) {
+    for (let station of line.stations) {
+      // search for a line that matches destination
+      const matchedLines = getAccessibleLines(line, station, linesDestination);
+
+      if (matchedLines.length > 0) {
+        result = [
+          ...result,
+          {
+            action: result.length === 0 ? 'enter' : 'switch',
+            station: originStation,
+            line: line,
+          },
+        ];
+        result = findRoute(station, destinationStation, allLines, result);
+      }
+    }
+  }
+
+  // TODO: repeat with a different station that has access to another line
+
+  return result;
 }
