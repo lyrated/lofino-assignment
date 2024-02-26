@@ -2,6 +2,11 @@ import { Line } from '../types/Line';
 import { Route } from '../types/Route';
 import { getAccessibleLines } from './getAccessibleLines';
 
+interface RouteSuggestion {
+  line: Line;
+  route: Route;
+}
+
 /**
  * returns the `Route` from `originStation` to `destinationStation`.
  * If there are multiple possible routes, you can return any of those routes.
@@ -32,69 +37,113 @@ export function getRoute(
   destinationStation: string,
   allLines: Line[]
 ): Route {
-  let result: Route = [];
-  return findRoute(originStation, destinationStation, allLines, result);
-}
-
-function findRoute(
-  originStation: string,
-  destinationStation: string,
-  allLines: Line[],
-  result: Route
-) {
-  const linesOrigin: Line[] = allLines.filter((line) => {
+  const originLines: Line[] = allLines.filter((line) => {
     return line.stations.includes(originStation);
   });
-  const linesDestination: Line[] = allLines.filter((line) => {
+
+  const destinationLines: Line[] = allLines.filter((line) => {
     return line.stations.includes(destinationStation);
   });
 
-  if (linesOrigin.length === 0 || linesDestination.length === 0) {
-    throw new Error('Origin or destination not found.');
+  if (originLines.length === 0 || destinationLines.length === 0) {
+    throw new Error('Station not found.');
   }
 
-  let [sameLine] = linesOrigin.filter((line) => {
-    return linesDestination.find((l) => l.name === line.name);
+  const routeSuggestion: RouteSuggestion[] = originLines.map((line) => {
+    return {
+      line: line,
+      route: [
+        {
+          action: 'enter',
+          station: originStation,
+          line: line,
+        },
+      ],
+    };
   });
 
-  if (sameLine) {
-    result = [
-      ...result,
-      {
-        action: result.length === 0 ? 'enter' : 'switch',
-        station: originStation,
-        line: sameLine,
-      },
-      {
+  return findRoute(
+    routeSuggestion,
+    destinationStation,
+    destinationLines,
+    allLines
+  );
+}
+
+function findRoute(
+  routeSuggestion: RouteSuggestion[],
+  destinationStation: string,
+  destinationLines: Line[],
+  allLines: Line[]
+): Route {
+  for (const suggestion of routeSuggestion) {
+    let { line, route } = suggestion;
+
+    if (line.stations.includes(destinationStation)) {
+      route.push({
         action: 'exit',
         station: destinationStation,
-        line: sameLine,
-      },
-    ];
+        line: line,
+      });
+      return route;
+    }
 
-    return result;
-  }
+    for (const currentStation of line.stations) {
+      // for simplicity only consider first matched line for solution
+      const [matchedLine] = getAccessibleLines(
+        line,
+        currentStation,
+        destinationLines
+      );
 
-  for (let line of linesOrigin) {
-    for (let station of line.stations) {
-      // search for a line that matches destination
-      const matchedLines = getAccessibleLines(line, station, linesDestination);
-
-      if (matchedLines.length > 0) {
-        result = [
-          ...result,
+      if (matchedLine) {
+        route.push(
           {
-            action: result.length === 0 ? 'enter' : 'switch',
-            station: originStation,
-            line: line,
+            action: 'switch',
+            station: currentStation,
+            line: matchedLine,
           },
-        ];
-        result = findRoute(station, destinationStation, allLines, result);
+          {
+            action: 'exit',
+            station: destinationStation,
+            line: matchedLine,
+          }
+        );
+        return route;
       }
+
+      const accessibleLines = getAccessibleLines(
+        line,
+        currentStation,
+        allLines
+      );
+
+      if (accessibleLines.length === 0) {
+        continue;
+      }
+
+      const newSuggestion: RouteSuggestion[] = accessibleLines.map((l) => {
+        return {
+          line: l,
+          route: [
+            ...route,
+            {
+              action: 'switch',
+              station: currentStation,
+              line: l,
+            },
+          ],
+        };
+      });
+
+      findRoute(
+        newSuggestion,
+        destinationStation,
+        destinationLines,
+        accessibleLines
+      );
     }
   }
 
-  // TODO: repeat with a different station that has access to another line
-
-  return result;
+  return [];
 }

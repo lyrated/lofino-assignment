@@ -38,7 +38,7 @@ it(`works when switching lines`, () => {
 });
 
 it(`works with 2 switches`, () => {
-  const route = getRoute('Viktoria-Luise-Platz', 'Westhafen', lines);
+  const route = getRoute('Viktoria-Luise-Platz', 'Schillingstraße', lines);
 
   expect(route).toBeDefined();
   expect(route).toHaveLength(4);
@@ -56,12 +56,12 @@ it(`works with 2 switches`, () => {
   expect($switch1.line.name).toBe('U2');
 
   expect($switch2.action).toBe('switch');
-  expect($switch2.station).toBe('Zoologischer Garten');
+  expect($switch2.station).toBe('Alexanderplatz');
   expect($switch2.line.name).toBe('U9');
 
   expect(exit.action).toBe('exit');
-  expect(exit.station).toBe('Westhafen');
-  expect(exit.line.name).toBe('U9');
+  expect(exit.station).toBe('Schillingstraße');
+  expect(exit.line.name).toBe('U5');
 });
 
 // ignore these for now - we'll talk about it in the interview
